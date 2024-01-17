@@ -1,0 +1,104 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: '';
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.pg-viewer-wrapper {
+  overflow-y: hidden;
+}
+
+/* CSS for WebKit browsers (Chrome, Safari) */
+.scrollbar {
+  margin-right: -2px;
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent; /* Adjust the color as needed */
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 5px;
+  height: 9px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background-color: #ccc; /* Adjust the color as needed */
+  border-radius: 6px;
+  
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  background-color: transparent;
+
+}
+ 
+.react-datepicker__portal {
+  z-index: 10000 !important;
+}
+
+.react-datepicker-popper {
+  /* z-index: 10000 !important; */
+  position: relative !important;
+}
