@@ -19,7 +19,7 @@ const Sidebar = ({ isOpen, onClose, onSelect }) => {
     { name: 'user', label: 'User', icon: user },
     { name: 'company', label: 'Company', icon: company },
     { name: 'compliance', label: 'Compliance', icon: compliance },
-    { name: 'Assessment Themeplates', label: 'Assessment Themeplates', icon: documents },
+    { name: 'Themeplates', label: 'Themeplates', icon: documents },
     { name: 'risk', label: 'Risk', icon: risk },
     { name: 'supplier', label: 'Supplier', icon: supplier }
   ]

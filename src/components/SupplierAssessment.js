@@ -163,7 +163,7 @@ export default function SupplierAssessment () {
     <div className="flex justify-around h-full w-full bg-secondary p-5">
       <div className="border p-4 w-1/2 flex-1 rounded-md bg-primary">
         <div className='flex justify-between items-center'>
-          <h2 className="text-lg font-semibold mb-4">Themeplates</h2>
+          <h2 className="text-lg font-semibold mb-4">Assessment Themeplates</h2>
           <FileUploadComponent onFileSelect={handleFileChange} title="Upload Assessment Format"/>
         </div>
         {/* <input type="file" onChange={handleFileChange} /> */}
