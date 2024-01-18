@@ -14,12 +14,14 @@ export default function Login () {
   }, [])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [userType, setUserType] = useState('')
 
   const handleSubmit = async (args) => {
     args.preventDefault()
 
     try {
-      const response = await httpClientRequest.post('/auth/login', { username, password })
+      if (!userType) return alert('User type required')
+      const response = await httpClientRequest.post('/auth/login', { username, password, userType })
       if (response.is_success === false) return alert(response.message)
 
       encryptAndStore('user', JSON.stringify(response.data))
@@ -37,6 +39,33 @@ export default function Login () {
     <div className="min-h-screen mt-[-10rem] flex items-center justify-center">
       <form onSubmit={handleSubmit} className="bg-white p-8 shadow-md rounded-md">
         <h2 className="text-2xl font-bold mb-6">Login</h2>
+        <select
+          value={userType}
+          onChange={(e) => setUserType(e.target.value)}
+          className="mt-1 p-2 border rounded-lg w-35"
+          required
+        >
+          <option selected={true} disabled={true} key='1' value=''>
+            Choose User Type
+          </option>
+          {
+            [
+              { value: 'application_owner', label: 'Application owner' },
+              { value: 'system_owner', label: 'System Owner' },
+              { value: 'privileged_user', label: 'Privileged user' },
+              { value: 'operations_user', label: 'Operations user' },
+              { value: 'authorising officer', label: 'Authorising officer' },
+              { value: 'aAuditor', label: 'Auditor' },
+              { value: 'consultant', label: 'Consultant' },
+              { value: 'guest', label: 'Guest' },
+              { value: 'end_user', label: 'End user' }
+            ].map(item => (
+              <option key={item.value} value={item.value}>
+                {item.label}
+              </option>
+            ))
+          }
+        </select>
         <div className="mb-4">
           <label htmlFor="username" className="block text-gray-700 text-sm font-bold mb-2">
             Username

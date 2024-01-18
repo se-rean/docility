@@ -7,6 +7,7 @@ const SupplierTable = ({ filteredSupplier, handleDelete }) => {
   const [viewCreateModal, setViewCreateModal] = useState(false)
   const [updateData, setUpdateData] = useState([{}])
   const headers = [
+    { name: 'companyId', label: 'Company Id', visible: true },
     { name: 'supplierName', label: 'Supplier name ', visible: true },
     { name: 'supplierTradingAs', label: 'Supplier trading as ', visible: true },
     { name: 'companyRegistrationAbnNo', label: 'Company registration ABN no.', visible: true },

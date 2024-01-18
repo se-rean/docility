@@ -153,6 +153,15 @@ export default function SupplierAssessment () {
     }
   }
 
+  const approveThemeplate = async (id, status) => {
+    const result = await httpClientRequest.put(`themeplate?id=${id}`, { status })
+    console.log(result)
+    if (result.is_success === true) {
+      alert(result.message)
+      fetchThemeplate()
+    }
+  }
+
   const cancelSave = () => {
     fetchThemeplate()
     setExcelData(null)
@@ -202,9 +211,41 @@ export default function SupplierAssessment () {
                       <td className="border p-2">{item.status}</td>
                       <td className="border p-2">{item.created_at}</td>
                       <td className=" border">
-                        <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline p-3">
-                    Approve
-                        </a>
+                        {
+                          item.status === 'Approved' && (
+                            <a href="#" className="font-medium text-green-600 dark:text-blue-500 hover:underline p-3">
+                            Send To Supplier
+                            </a>
+                          )
+                        }
+                        {
+                          item.status === 'Pending' && (
+                            <a onClick={() => approveThemeplate(item.id, 'Approved')} href="#" className="font-medium text-textPrimary dark:text-blue-500 hover:underline p-3">
+                            Approve
+                            </a>
+                          )
+                        }
+                        {
+                          item.status === 'Pending' && (
+                            <a onClick={() => approveThemeplate(item.id, 'Reject')} href="#" className="font-medium text-textPrimary dark:text-blue-500 hover:underline p-3">
+                            Reject
+                            </a>
+                          )
+                        }
+                        {
+                          item.status === 'Approved' && (
+                            <a onClick={() => approveThemeplate(item.id, 'Disabled')} href="#" className="font-medium text-textPrimary dark:text-blue-500 hover:underline p-3">
+                            Disabled
+                            </a>
+                          )
+                        }
+                        {
+                          item.status === 'Disabled' && (
+                            <a onClick={() => approveThemeplate(item.id, 'Approved')} href="#" className="font-medium text-textPrimary dark:text-blue-500 hover:underline p-3">
+                            Enable
+                            </a>
+                          )
+                        }
                         <a onClick={() => deleteThemeplate(item.id)} href="#" className="font-medium text-red-500 dark:text-blue-500 hover:underline p-3">
                     Delete
                         </a>

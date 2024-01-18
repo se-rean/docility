@@ -42,7 +42,7 @@ export default function Supplier () {
 
   return (
     <div className='bg-primary h-full w-[90rem] rounded-md border-2 '>
-      { viewCreateModal && <CreateSupplierModal addNewSupplier={newSupplier} closeModal={closeModal}/> }
+      { viewCreateModal && <CreateSupplierModal updateSupplier={newSupplier} addNewSupplier={newSupplier} closeModal={closeModal}/> }
       <div className='p-5'>
         <div className='flex items-center gap-5 justify-between'>
           <div className="rounded-md border dark:bg-gray-900">

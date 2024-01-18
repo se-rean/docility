@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import httpClientRequest from '../lib/httpClientRequest'
 import ErrorBoundary from '../ErrorBoundary'
+import { decryptFromStorage, encryptAndStore } from '../lib/SecureStorage'
 
+const userData = decryptFromStorage('user')
 export default function ManageUserModal ({
   handleSubmit, closeModal, createUser, update = false,
   updateData = {}
@@ -37,8 +39,8 @@ export default function ManageUserModal ({
     const mappedData = fields.reduce((acc, cur) => {
       return { ...acc, [cur.name]: cur.value }
     }, {})
-
-    console.log('upodate data', updateData)
+    mappedData.company_id = userData?.company_id
+    console.log('upodate data', userData)
     let result
     if (!update) {
       result = await httpClientRequest.post('user/', mappedData)

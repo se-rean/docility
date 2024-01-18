@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import ManageUserModal from './ManageUserModal'
 import httpClientRequest from '../lib/httpClientRequest'
+import { decryptFromStorage, encryptAndStore } from '../lib/SecureStorage'
 import Modal from './Modal'
 const UserManagement = () => {
   const [users, setUsers] = useState([])
+  const [companyid, setCompanyId] = useState('')
   const [fetchUsers, setFetchUsers] = useState([])
   const [viewCreateModal, setViewCreateModal] = useState(false)
   const [deleteItemId, setDeleteItemId] = useState(null)
@@ -35,7 +37,8 @@ const UserManagement = () => {
 
   const getUsers = async () => {
     setFetchUsers(true)
-    const userList = await httpClientRequest.get('/user/')
+    const companyData = decryptFromStorage('user')
+    const userList = await httpClientRequest.get(`/user/?company_id=${companyData.company_id}`)
     if (userList.is_success === false) alert(userList.message)
     setUsers(userList)
     console.log(userList)

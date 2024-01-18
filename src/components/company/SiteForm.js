@@ -55,7 +55,7 @@ const SiteForm = ({ companyData, submited, isUpdate, handleSiteInputChange, remo
       ]
     }
   ]
-  const [fields, setFields] = useState({})
+  const [fields, setFields] = useState([{}])
 
   useEffect(() => {
     setFields(formInitialData)
@@ -141,6 +141,7 @@ const SiteForm = ({ companyData, submited, isUpdate, handleSiteInputChange, remo
   }
 
   const handleAllFields = async () => {
+    if (!fields) return
     const mappedData = await fields.reduce((acc, cur) => {
       return { ...acc, [cur.name]: cur.value }
     }, {})

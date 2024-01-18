@@ -3,89 +3,108 @@ import React, { useEffect, useState } from 'react'
 import httpClientRequest from '../lib/httpClientRequest'
 import ErrorBoundary from '../ErrorBoundary'
 // eslint-disable-next-line react/no-unknown-property
+import { decryptFromStorage, encryptAndStore } from '../lib/SecureStorage'
 
+const userData = decryptFromStorage('user')
 const existingFields = [
   { name: 'supplierName', label: 'Supplier name ', value: '' },
   { name: 'supplierTradingAs', label: 'Supplier trading as ', value: '' },
-  { name: 'companyRegistrationAbnNo', label: 'Company registration ABN no.', value: '' },
-  { name: 'companyRegistrationAcnNo', label: 'Company registration ACN no. ', value: '' },
+  { name: 'companyRegistrationAbnNo', label: 'Company registration ABN no.', value: '', type: 'number' },
+  { name: 'companyRegistrationAcnNo', label: 'Company registration ACN no. ', value: '', type: 'number' },
   { name: 'website', label: 'Website ', value: '' },
   { name: 'bsb', label: 'BSB', value: '' },
-  { name: 'bankAccountNumber', label: 'Bank Account Number', value: '' },
+  { name: 'bankAccountNumber', label: 'Bank Account Number', value: '', type: 'number' },
   { name: 'bankAccountName', label: 'Bank Account Name', value: '' },
-  { name: 'localOrOverseasSupplier', label: 'Local / Overseas supplier ', value: '' },
+  { name: 'localOrOverseasSupplier', label: 'Local / Overseas supplier ', value: '', options: [{ name: 'Local' }, { name: 'International' }] },
   { name: 'supplierAddress', label: 'Supplier address', value: '' },
   { name: 'country', label: 'Country ', value: '' },
   { name: 'state', label: 'State', value: '' },
   { name: 'subUrb', label: 'Suburb', value: '' },
-  { name: 'postCode', label: 'Postcode', value: '' },
+  { name: 'postCode', label: 'Postcode', value: '', type: 'number' },
   { name: 'contactPersonName', label: 'Contact person name', value: '' },
-  { name: 'supplierPhoneNumber', label: 'Phone number ', value: '' },
+  { name: 'supplierPhoneNumber', label: 'Phone number ', value: '', type: 'number' },
   { name: 'supplierEmailId', label: 'Email id ', value: '' },
   { name: '24x7ContactPersonName', label: '24x7 contact person name (if any) ', value: '' },
-  { name: 'contactPersonPhoneNumber', label: 'Phone number ', value: '' },
+  { name: 'contactPersonPhoneNumber', label: 'Phone number ', value: '', type: 'number' },
   { name: 'contactPersonEmailId', label: 'Email id ', value: '' },
   { name: 'paymentTerms', label: 'Payment terms', value: '' },
   { name: 'specialConditionsOrAdditionalNotes', label: 'Special conditions or additional notes ', value: '' },
-  { name: 'supplierCategory', label: 'Supplier category ', value: '' },
+  { name: 'supplierCategory', label: 'Supplier category ', value: 'Non-critical Supplier', options: [{ name: 'Critical Supplier' }, { name: 'Non-critical Supplier' }] },
+  { name: 'supplierType', label: 'Supplier category ', value: 'Cloud Service Provider', options: [{ name: 'Cloud Service Provider' }, { name: 'Manage Service Provider' }] },
   { name: 'serviceManaged', label: 'Service managed (if any) ', value: '' },
   { name: 'purposeOfSupplier', label: 'Purpose of supplier ', value: '' },
   { name: 'dataSharedWithSupplier', label: 'Data shared with supplier ', value: '' },
   { name: 'departmentManagingSupplier', label: 'Department managing supplier ', value: '' },
-  { name: 'supplierOwner', label: 'Supplier owner ', value: '' },
+  { name: 'supplierOwner', label: 'Supplier owner ', value: '', options: [{}] },
   { name: 'slaDetails', label: 'SLA details ', value: '' },
-  { name: 'creditLimit', label: 'Credit limit ', value: '' },
+  { name: 'creditLimit', label: 'Credit limit ', value: '', type: 'number' },
   { name: 'ISO27001', label: 'ISO 27001 Certified and valid', value: 'Yes', options: [{ name: 'Yes' }, { name: 'No' }] },
   { name: 'ISO9001', label: 'ISO 9001 Certified and valid', value: 'Yes', options: [{ name: 'Yes' }, { name: 'No' }] },
   { name: 'ISO14001', label: 'ISO 14001 Certified and valid ', value: '', options: [{ name: 'Yes' }, { name: 'No' }] },
   { name: 'ISO45001', label: 'ISO 45001 Certified and valid ', value: '', options: [{ name: 'Yes' }, { name: 'No' }] },
   { name: 'modernSlaveryActApplicable', label: 'Modern Slavery Act applicable ', value: 'Yes', options: [{ name: 'Yes' }, { name: 'No' }] },
-  { name: 'modernSlaveryStatementPublishedDate', label: 'Modern Slavery Statement published date', value: 'Yes', options: [{ name: 'Yes' }, { name: 'No' }] },
+  { name: 'modernSlaveryStatementPublishedDate', label: 'Modern Slavery Statement published date', value: '', type: 'date' },
   { name: 'anyOtherCertification', label: 'Any other certification', value: 'Yes', options: [{ name: 'Yes' }, { name: 'No' }] },
-  { name: 'estimatedAnnualBudgetValue', label: 'Estimated annual budget value ', value: '' },
+  { name: 'estimatedAnnualBudgetValue', label: 'Estimated annual budget value ', value: '', type: 'number' },
   { name: 'contractCommencementDate', label: 'Contract Commencement date ', value: '' },
-  { name: 'contractEndDate', label: 'Contract end date ', value: '' }
+  { name: 'contractEndDate', label: 'Contract end date ', value: '' },
+  { name: 'Sensitivity_of_data_involved', label: 'Sensitivity of data involved (CIA Impact) ', value: 'Availability', options: [{ name: 'Confidentiality' }, { name: 'Integrity' }, { name: 'Availability' }] },
+  { name: 'threat', label: 'Threat ', value: '' },
+  { name: 'matrix_to_be_used_for_risk_assessment', label: 'Matrix to be used for risk assessment ', value: '3X3', options: [{ name: '3X3' }, { name: '5X5' }] },
+  { name: 'likelihood', label: 'Likelihood ', value: 'Rare 1', options: [{ name: 'Almost Certain 3' }, { name: 'Possible 2' }, { name: 'Rare 1' }] },
+  { name: 'impact', label: 'Impact ', value: 'Insignificant 1', options: [{ name: 'Insignificant 1' }, { name: 'Moderate 2' }, { name: 'Significant 3' }] },
+  { name: 'inherent_risk_level', label: 'Inherent Risk level/rating ', value: '', disabled: true },
+  { name: 'risk_assessment_completed', label: 'Risk Assessment completed ', value: 'No', options: [{ name: 'Yes' }, { name: 'No' }] },
+  { name: 'supplier_assessment_required', label: 'Supplier assessment required ', value: 'Yes', options: [{ name: 'Yes' }, { name: 'No' }] },
+  { name: 'supplier_assessment_due_date', label: 'Supplier assessment due date ', value: '', type: 'date' },
+  { name: 'supplier_assessment_status', label: 'Supplier Assessment status ', value: 'Not Due', options: [{ name: 'Not Due' }, { name: 'Not Yet Started' }, { name: 'In Progress' }, { name: 'Completed' }] },
+  { name: 'supplier_assessment_reviewer_person', label: 'Supplier assessment reviewer person ', value: '' },
+  { name: 'supplier_agreement ', label: 'Supplier agreement ', value: 'Yes', options: [{ name: 'Yes' }, { name: 'No' }] },
+  { name: 'supplier_approval_status', label: 'Supplier approval status ', value: 'Draft ', options: [{ name: 'Draft ' }, { name: 'approved ' }, { name: 'rejected' }] },
+  { name: 'date_entered ', label: 'Date entered ', value: '', type: 'date' },
+  { name: 'decision_date ', label: 'Decision date ', value: '', type: 'date' }
 ]
 
 const newFields = [
   { name: 'supplierName', label: 'Supplier name ', value: '' },
   { name: 'supplierTradingAs', label: 'Supplier trading as ', value: '' },
-  { name: 'companyRegistrationAbnNo', label: 'Company registration ABN no.', value: '' },
-  { name: 'companyRegistrationAcnNo', label: 'Company registration ACN no. ', value: '' },
+  { name: 'companyRegistrationAbnNo', label: 'Company registration ABN no.', value: '', type: 'number' },
+  { name: 'companyRegistrationAcnNo', label: 'Company registration ACN no. ', value: '', type: 'number' },
   { name: 'website', label: 'Website ', value: '' },
   { name: 'bsb', label: 'BSB', value: '' },
-  { name: 'bankAccountNumber', label: 'Bank Account Number', value: '' },
+  { name: 'bankAccountNumber', label: 'Bank Account Number', value: '', type: 'number' },
   { name: 'bankAccountName', label: 'Bank Account Name', value: '' },
-  { name: 'localOrOverseasSupplier', label: 'Local / Overseas supplier ', value: '' },
+  { name: 'localOrOverseasSupplier', label: 'Local / Overseas supplier ', value: '', options: [{ name: 'Local' }, { name: 'International' }] },
   { name: 'supplierAddress', label: 'Supplier address', value: '' },
   { name: 'country', label: 'Country ', value: '' },
   { name: 'state', label: 'State', value: '' },
   { name: 'subUrb', label: 'Suburb', value: '' },
-  { name: 'postCode', label: 'Postcode', value: '' },
+  { name: 'postCode', label: 'Postcode', value: '', type: 'number' },
   { name: 'contactPersonName', label: 'Contact person name', value: '' },
-  { name: 'supplierPhoneNumber', label: 'Phone number ', value: '' },
+  { name: 'supplierPhoneNumber', label: 'Phone number ', value: '', type: 'number' },
   { name: 'supplierEmailId', label: 'Email id ', value: '' },
   { name: '24x7ContactPersonName', label: '24x7 contact person name (if any) ', value: '' },
-  { name: 'contactPersonPhoneNumber', label: 'Phone number ', value: '' },
+  { name: 'contactPersonPhoneNumber', label: 'Phone number ', value: '', type: 'number' },
   { name: 'contactPersonEmailId', label: 'Email id ', value: '' },
   { name: 'paymentTerms', label: 'Payment terms', value: '' },
   { name: 'specialConditionsOrAdditionalNotes', label: 'Special conditions or additional notes ', value: '' },
-  { name: 'supplierCategory', label: 'Supplier category ', value: '' },
+  { name: 'supplierCategory', label: 'Supplier category ', value: 'Non-critical Supplier', options: [{ name: 'Critical Supplier' }, { name: 'Non-critical Supplier' }] },
+  { name: 'supplierType', label: 'Supplier category ', value: 'Cloud Service Provider', options: [{ name: 'Cloud Service Provider' }, { name: 'Manage Service Provider' }] },
   { name: 'serviceManaged', label: 'Service managed (if any) ', value: '' },
   { name: 'purposeOfSupplier', label: 'Purpose of supplier ', value: '' },
   { name: 'dataSharedWithSupplier', label: 'Data shared with supplier ', value: '' },
   { name: 'departmentManagingSupplier', label: 'Department managing supplier ', value: '' },
-  { name: 'supplierOwner', label: 'Supplier owner ', value: '' },
+  { name: 'supplierOwner', label: 'Supplier owner ', value: '', options: [{}] },
   { name: 'slaDetails', label: 'SLA details ', value: '' },
-  { name: 'creditLimit', label: 'Credit limit ', value: '' },
+  { name: 'creditLimit', label: 'Credit limit ', value: '', type: 'number' },
   { name: 'ISO27001', label: 'ISO 27001 Certified and valid', value: 'Yes', options: [{ name: 'Yes' }, { name: 'No' }] },
   { name: 'ISO9001', label: 'ISO 9001 Certified and valid', value: 'Yes', options: [{ name: 'Yes' }, { name: 'No' }] },
   { name: 'ISO14001', label: 'ISO 14001 Certified and valid ', value: 'Yes', options: [{ name: 'Yes' }, { name: 'No' }] },
   { name: 'ISO45001', label: 'ISO 45001 Certified and valid ', value: 'Yes', options: [{ name: 'Yes' }, { name: 'No' }] },
   { name: 'modernSlaveryActApplicable', label: 'Modern Slavery Act applicable ', value: 'Yes', options: [{ name: 'Yes' }, { name: 'No' }] },
-  { name: 'modernSlaveryStatementPublishedDate', label: 'Modern Slavery Statement published date', value: 'Yes', options: [{ name: 'Yes' }, { name: 'No' }] },
+  { name: 'modernSlaveryStatementPublishedDate', label: 'Modern Slavery Statement published date', value: '', type: 'date' },
   { name: 'anyOtherCertification', label: 'Any other certification', value: 'Yes', options: [{ name: 'Yes' }, { name: 'No' }] },
-  { name: 'estimatedAnnualBudgetValue', label: 'Estimated annual budget value ', value: '' },
+  { name: 'estimatedAnnualBudgetValue', label: 'Estimated annual budget value ', value: '', type: 'number' },
   { name: 'contractCommencementDate', label: 'Contract Commencement date ', value: '', type: 'date' },
   { name: 'contractEndDate', label: 'Contract end date ', value: '', type: 'date' },
   { name: 'Sensitivity_of_data_involved', label: 'Sensitivity of data involved (CIA Impact) ', value: 'Availability', options: [{ name: 'Confidentiality' }, { name: 'Integrity' }, { name: 'Availability' }] },
@@ -94,7 +113,7 @@ const newFields = [
   { name: 'likelihood', label: 'Likelihood ', value: 'Rare 1', options: [{ name: 'Almost Certain 3' }, { name: 'Possible 2' }, { name: 'Rare 1' }] },
   { name: 'impact', label: 'Impact ', value: 'Insignificant 1', options: [{ name: 'Insignificant 1' }, { name: 'Moderate 2' }, { name: 'Significant 3' }] },
   { name: 'inherent_risk_level', label: 'Inherent Risk level/rating ', value: '', disabled: true },
-  { name: 'risk_assessment_completed', label: 'Risk Assessment completed ', value: '' },
+  { name: 'risk_assessment_completed', label: 'Risk Assessment completed ', value: 'No', options: [{ name: 'Yes' }, { name: 'No' }] },
   { name: 'supplier_assessment_required', label: 'Supplier assessment required ', value: 'Yes', options: [{ name: 'Yes' }, { name: 'No' }] },
   { name: 'supplier_assessment_due_date', label: 'Supplier assessment due date ', value: '', type: 'date' },
   { name: 'supplier_assessment_status', label: 'Supplier Assessment status ', value: 'Not Due', options: [{ name: 'Not Due' }, { name: 'Not Yet Started' }, { name: 'In Progress' }, { name: 'Completed' }] },
@@ -132,6 +151,7 @@ export default function CreateSupplierModal ({
   useEffect(() => {
     if (supplierType === 'new') {
       setFields(newFields)
+      getUserList()
     } else if (supplierType === 'existing') {
       setFields(existingFields)
     }
@@ -142,12 +162,20 @@ export default function CreateSupplierModal ({
         newFields.forEach(item => {
           item.value = updateData.data[item.name]
         })
+        getUserList()
         console.log(newFields)
+      } else {
+        existingFields.forEach(item => {
+          item.value = updateData.data[item.name]
+        })
       }
     }
   }, [supplierType])
 
-  const handleFieldChange = (name, value) => {
+  const handleFieldChange = (name, value, type = 'text') => {
+    const numericRegex = /^[0-9]*$/
+    console.log('type', type)
+    if (type === 'number' && !numericRegex.test(value)) return
     setFields((prevFields) => {
       const fieldIndex = prevFields.findIndex((field) => field.name === name)
       const updatedFields = [...prevFields]
@@ -233,15 +261,36 @@ export default function CreateSupplierModal ({
     console.log(mappedData)
   }
 
+  const getUserList = async () => {
+    const userList = await httpClientRequest.get(`/user/?company_id=${userData?.company_id}`)
+    console.log('userlist', userList)
+    setFields((prevFields) => {
+      const updatedFields = [...prevFields]
+
+      const supplierOwner = prevFields.findIndex((field) => field.name === 'supplierOwner')
+      const owner = []
+      userList.data.forEach(item => {
+        owner.push({ value: item.id, name: `${item.first_name} ${item.last_name}` })
+      })
+      console.log('owner', owner)
+      updatedFields[supplierOwner].options = owner
+
+      return updatedFields
+    })
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     console.log(updateData)
     const mappedData = fields.reduce((acc, cur) => {
       return { ...acc, [cur.name]: cur.value }
     }, {})
-    console.log(mappedData)
+
     let result = ''
     mappedData.supplierType = supplierType
+    mappedData.companyId = userData?.company_id
+
+    console.log(mappedData)
     if (isUpdate === false) {
       result = await httpClientRequest.post('supplier', {
         supplier: mappedData
@@ -282,9 +331,9 @@ export default function CreateSupplierModal ({
                       <option key='new' value='new'>
                         New Supplier
                       </option>
-                      <option key='existing' value='existing'>
+                      {/* <option key='existing' value='existing'>
                         Existing Supplier
-                      </option>
+                      </option> */}
                     </select>
                   </div>
                   { fields.length > 0 &&
@@ -295,7 +344,7 @@ export default function CreateSupplierModal ({
                             <><label for={field.name} class="absolute text-sm text-textAccent dark:text-green-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">{field.label}</label><select
                               id={field.name}
                               value={field.value}
-                              onChange={(e) => handleFieldChange(field.name, e.target.value)}
+                              onChange={(e) => handleFieldChange(field.name, e.target.value, field.type)}
                               className="mt-1 p-2 border rounded w-full"
                               required
                             >
@@ -312,7 +361,7 @@ export default function CreateSupplierModal ({
                           : (
                             <div>
                               <div class="relative z-0">
-                                <input value={field.value} onChange={(e) => handleFieldChange(field.name, e.target.value)} type={field.type === 'date' ? 'date' : 'text'} id={field.name}
+                                <input value={field.value} onChange={(e) => handleFieldChange(field.name, e.target.value, field.type)} type={field.type === 'date' ? 'date' : 'text'} id={field.name}
                                   required
                                   aria-describedby="standard_success_help" className={`block py-2.5 px-0 w-full text-sm text-textAccent bg-transparent border-0 border-b-2 border-textAccent appearance-none dark:text-white dark:border-green-500 dark:focus:border-green-500 focus:outline-none focus:ring-0 peer ${field.disabled === true ? 'cursor-not-allowed' : ''}`} placeholder=" " />
                                 <label for={field.name} class="absolute text-sm text-textAccent dark:text-green-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">{field.label}</label>

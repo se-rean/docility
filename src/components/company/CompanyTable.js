@@ -23,10 +23,10 @@ const CompanyTable = ({ filteredSites, handleDelete }) => {
           <tr>
             <th></th>
             <th key='sites' scope="col" className="px-6 py-3">
-              sites
+              Sites
             </th>
             <th key='division' scope="col" className="px-6 py-3">
-              division
+              Department
             </th>
             {
               Object.keys(filteredSites[0]).filter(item => !['id', 'sites', 'created_at', 'updated_at', 'company_id', 'division'].includes(item)).map(item => (
