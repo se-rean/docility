@@ -13,6 +13,8 @@ export default function MainContent ({ selected }) {
     localStorage.setItem('accessToken', '')
     localStorage.setItem('refreshToken', '')
     localStorage.setItem('user', '')
+    localStorage.setItem('username', '')
+    localStorage.setItem('role', '')
     navigate('/')
   }
 
@@ -36,6 +38,8 @@ export default function MainContent ({ selected }) {
       setComponent(lazy(() => import('./Supplier')))
     } else if (selected === 'Themeplates') {
       setComponent(lazy(() => import('./SupplierAssessment')))
+    } else if (selected === 'Customer Management') {
+      setComponent(lazy(() => import('./customer/CustomerManagement')))
     } else {
       setComponent(lazy(() => import('./UnderConstruction')))
     }

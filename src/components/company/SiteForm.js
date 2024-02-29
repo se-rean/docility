@@ -11,18 +11,18 @@ const SiteForm = ({ companyData, submited, isUpdate, handleSiteInputChange, remo
     { name: 'company_organization', label: 'Organisation name', value: '' },
     { name: 'company_type_of_business', label: 'Type of business', value: '' },
     { name: 'company_text_file_number', label: 'Tax file number', value: '' },
-    { name: 'company_acn_number', label: 'ACN number', value: '' },
+    { name: 'company_acn_number', label: 'ACN number', value: '', type: 'number' },
     { name: 'company_communication_address', label: 'Communication Address ', value: '' },
     { name: 'company_country', label: 'Country', value: '' },
     { name: 'company_state', label: 'State', value: '' },
     { name: 'company_suburb', label: 'Suburb', value: '' },
     { name: 'contact_person_name', label: 'Contact person name', value: '' },
-    { name: 'contact_person_mobile_no', label: 'Contact person mobile no', value: '' },
+    { name: 'contact_person_mobile_no', label: 'Contact person mobile no', value: '', type: 'number' },
     { name: 'contact_person_email', label: 'Contact person email', value: '' },
     { name: 'timezone', label: 'Timezone', value: '' },
     { name: 'domain', label: 'Domain', value: 'No', options: [{ name: 'No' }, { name: 'Yes' }] },
     { name: 'account_creation_date', label: 'Account creation date', value: new Date().toISOString().split('T')[0], type: 'date' },
-    { name: 'account_expiry_date', label: 'Account expiry date', value: new Date().toISOString().split('T')[0], type: 'date' },
+    { name: 'account_expiry_date', label: 'Account expiry date', value: '', type: 'date' },
     {
       name: 'information_security_framework',
       label: 'Information Security Framework / Products',
@@ -122,7 +122,11 @@ const SiteForm = ({ companyData, submited, isUpdate, handleSiteInputChange, remo
     handleAllFields()
   }
 
-  const handleFieldChange = async (name, value) => {
+  const handleFieldChange = async (name, value, type) => {
+    const numericRegex = /^[0-9]*$/
+    console.log('type', type)
+    if (type === 'number' && !numericRegex.test(value)) return
+
     const fieldIndex = fields.findIndex((field) => field.name === name)
     const updatedFields = [...fields]
     updatedFields[fieldIndex].value = value
@@ -173,7 +177,7 @@ const SiteForm = ({ companyData, submited, isUpdate, handleSiteInputChange, remo
                             <><label htmlFor={field.type} className="absolute text-sm text-gray-600 dark:text-green-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">{field.label}</label><select
                               id={field.name}
                               value={field.value}
-                              onChange={(e) => handleFieldChange(field.name, e.target.value)}
+                              onChange={(e) => handleFieldChange(field.name, e.target.value, field.type)}
                               className="mt-1 p-2 border rounded w-full bg-secondary"
                               required
                             >
@@ -188,7 +192,7 @@ const SiteForm = ({ companyData, submited, isUpdate, handleSiteInputChange, remo
                             <div>
                               <div className="relative z-0">
                                 {
-                                  <input value={field.value} onChange={(e) => handleFieldChange(field.name, e.target.value)} type={field.type !== 'date' ? 'text' : 'date'} aria-describedby="standard_success_help" className="block py-2.5 px-0 w-full text-sm text-textAccent bg-transparent border-0 border-b-2 border-textAccent appearance-none dark:text-white dark:border-green-500 dark:focus:border-green-500 focus:outline-none focus:ring-0 peer" placeholder=" " required/>
+                                  <input value={field.value} onChange={(e) => handleFieldChange(field.name, e.target.value, field.type)} type={field.type !== 'date' ? 'text' : 'date'} aria-describedby="standard_success_help" className="block py-2.5 px-0 w-full text-sm text-textAccent bg-transparent border-0 border-b-2 border-textAccent appearance-none dark:text-white dark:border-green-500 dark:focus:border-green-500 focus:outline-none focus:ring-0 peer" placeholder=" " required/>
                                 }
                                 <label htmlFor={field.name} className="absolute text-sm text-gray-600 dark:text-green-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">{field.label}</label>
                               </div>

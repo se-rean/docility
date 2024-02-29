@@ -6,6 +6,7 @@ import CreateSupplierModal from './CreateSupplierModal'
 const SupplierTable = ({ filteredSupplier, handleDelete }) => {
   const [viewCreateModal, setViewCreateModal] = useState(false)
   const [updateData, setUpdateData] = useState([{}])
+  console.log('filtered', filteredSupplier)
   const headers = [
     { name: 'companyId', label: 'Company Id', visible: true },
     { name: 'supplierName', label: 'Supplier name ', visible: true },
@@ -59,10 +60,10 @@ const SupplierTable = ({ filteredSupplier, handleDelete }) => {
     { name: 'supplier_assessment_due_date', label: 'Supplier assessment due date ', visible: true, type: 'date' },
     { name: 'supplier_assessment_status', label: 'Supplier Assessment status ', visible: true },
     { name: 'supplier_assessment_reviewer_person', label: 'Supplier assessment reviewer person ', visible: true },
-    { name: 'supplier_agreement ', label: 'Supplier agreement ', visible: true },
+    { name: 'supplier_agreement', label: 'Supplier agreement ', visible: true },
     { name: 'supplier_approval_status', label: 'Supplier approval status ', visible: true },
-    { name: 'date_entered ', label: 'Date entered ', visible: true, type: 'date' },
-    { name: 'decision_date ', label: 'Decision date ', visible: true, type: 'date' }
+    { name: 'date_entered', label: 'Date entered ', visible: true, type: 'date' },
+    { name: 'decision_date', label: 'Decision date ', visible: true, type: 'date' }
   ]
 
   const [columnVisibility, setColumnVisibility] = useState(
@@ -124,9 +125,9 @@ const SupplierTable = ({ filteredSupplier, handleDelete }) => {
               Action
               </th>
               {headers.map((item) =>
-                columnVisibility[item.name]
+                columnVisibility[item?.name]
                   ? (
-                    <th key={item.name} scope="col" className="border p-2 whitespace-nowrap">
+                    <th key={item?.name} scope="col" className="border p-2 whitespace-nowrap">
                       <span>{item.label}</span>
                     </th>
                   )
@@ -141,7 +142,7 @@ const SupplierTable = ({ filteredSupplier, handleDelete }) => {
                   <a onClick={() => updateSupplier(supplier)} href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
                   Edit
                   </a>
-                  <a onClick={() => handleDelete(supplier._id)} href="#" className="font-medium text-red-500 dark:text-blue-500 hover:underline">
+                  <a onClick={() => handleDelete(supplier.id)} href="#" className="font-medium text-red-500 dark:text-blue-500 hover:underline">
                   Delete
                   </a>
                 </td>
@@ -150,7 +151,7 @@ const SupplierTable = ({ filteredSupplier, handleDelete }) => {
                     ? (
                       <td key={`${[supplier.id]}-${item.name}`} className="border p-2">
                         {/* {JSON.stringify(supplier.data)} */}
-                        {supplier.data[item.name]}
+                        {supplier[item.name]}
                       </td>
                     )
                     : null

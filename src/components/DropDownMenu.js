@@ -8,6 +8,8 @@ const DropdownMenu = ({ user, logout }) => {
     setDropdownOpen((prevState) => !prevState)
   }
 
+  console.log(user)
+
   return (
     <div className="relative inline-block text-left"
       onMouseLeave={() => setDropdownOpen(false)}
@@ -20,7 +22,7 @@ const DropdownMenu = ({ user, logout }) => {
         aria-haspopup="true"
         aria-expanded={isDropdownOpen ? 'true' : 'false'}
       >
-        {user?.username}
+        {user.role || 'Company'}: {user?.company_organization || user.username}
         <svg className="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
           <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
         </svg>
@@ -35,8 +37,7 @@ const DropdownMenu = ({ user, logout }) => {
         >
           <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
             <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
-              <div className="font-medium truncate">{user.role}: {user.last_name}</div>
-              <div className="font-small">{user.email}</div>
+              <div disabled className="font-medium truncate  text-wrap"><input type='text' className='text-xs w-full  text-wrap' value={user?.company_id}/></div>
             </div>
             <li>
               <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">

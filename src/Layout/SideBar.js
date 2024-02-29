@@ -21,7 +21,8 @@ const Sidebar = ({ isOpen, onClose, onSelect }) => {
     { name: 'compliance', label: 'Compliance', icon: compliance },
     { name: 'Themeplates', label: 'Themeplates', icon: documents },
     { name: 'risk', label: 'Risk', icon: risk },
-    { name: 'supplier', label: 'Supplier', icon: supplier }
+    { name: 'supplier', label: 'Supplier', icon: supplier },
+    { name: 'customer', label: 'Customer Management', icon: supplier }
   ]
 
   const [selectedItem, setSelectedItem] = useState('Home')

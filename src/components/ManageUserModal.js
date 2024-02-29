@@ -16,12 +16,12 @@ export default function ManageUserModal ({
     { name: 'last_name', label: 'Last Name', value: '' },
     { name: 'department', label: 'Department', value: '' },
     { name: 'position', label: 'Position', value: '' },
-    { name: 'phone_no', label: 'Phone No.', value: '' },
+    { name: 'phone_no', label: 'Phone No.', value: '', type: 'number' },
     { name: 'site_address', label: 'Site Address', value: '' },
     { name: 'country', label: 'Country', value: '' },
     { name: 'state', label: 'State', value: '' },
     { name: 'suburb', label: 'SubUrb', value: '' },
-    { name: 'expiration_date', label: 'Expiration Date', value: '' },
+    { name: 'expiration_date', label: 'Expiration Date', value: '', type: 'date' },
     { name: 'MFA', label: 'MFA', value: 'No' },
     { name: 'role', label: 'Role', value: 'Guest' }
   ])
@@ -50,6 +50,24 @@ export default function ManageUserModal ({
     createUser(result)
   }
 
+  const getDivisionList = async () => {
+    const divisionList = await httpClientRequest.get(`/company/division/?company_id=${userData?.company_id}`)
+    console.log(divisionList)
+    setFields((prevFields) => {
+      const updatedFields = [...prevFields]
+
+      const supplierOwner = prevFields.findIndex((field) => field.name === 'department')
+      const owner = []
+      divisionList.data.forEach(item => {
+        owner.push({ value: item.id, name: item.department_name })
+      })
+      console.log('owner', owner)
+      updatedFields[supplierOwner].options = owner
+      updatedFields[supplierOwner].value = owner[0]?.value
+      return updatedFields
+    })
+  }
+
   const fetchUserDataForUpdate = async () => {
     try {
       // Use the provided updateData for initializing field values
@@ -71,6 +89,7 @@ export default function ManageUserModal ({
     if (update) {
       fetchUserDataForUpdate()
     }
+    getDivisionList()
   }, [])
 
   const fetchRole = async () => {
@@ -96,7 +115,11 @@ export default function ManageUserModal ({
     }
   }
 
-  const handleFieldChange = (name, value) => {
+  const handleFieldChange = (name, value, type = 'text') => {
+    const numericRegex = /^[0-9]*$/
+    console.log('type', type)
+    if (type === 'number' && !numericRegex.test(value)) return
+
     setFields((prevFields) => {
       const fieldIndex = prevFields.findIndex((field) => field.name === name)
       const updatedFields = [...prevFields]
@@ -138,12 +161,15 @@ export default function ManageUserModal ({
                             <><label htmlFor={field.name} className="absolute text-sm text-textAccent dark:text-green-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">{field.label}</label><select
                               id={field.name}
                               value={field.value}
-                              onChange={(e) => handleFieldChange(field.name, e.target.value)}
+                              onChange={(e) => handleFieldChange(field.name, e.target.value, field.type)}
                               className="mt-1 p-2 border rounded w-full"
                               required
                             >
+                              <option disabled key={field.value}>
+                                Select {field.label}
+                              </option>
                               {field.options.map((option) => (
-                                <option key={option.name} value={option.name}>
+                                <option key={option.name} value={option.value}>
                                   {option.name}
                                 </option>
                               ))}
@@ -152,7 +178,7 @@ export default function ManageUserModal ({
                           : (
                             <div>
                               <div className="relative z-0">
-                                <input value={field.value} onChange={(e) => handleFieldChange(field.name, e.target.value)} type="text" id={field.name} aria-describedby="standard_success_help" className="block py-2.5 px-0 w-full text-sm text-textAccent bg-transparent border-0 border-b-2 border-textAccent appearance-none dark:text-white dark:border-green-500 dark:focus:border-green-500 focus:outline-none focus:ring-0 peer" placeholder=" " />
+                                <input value={field.value} onChange={(e) => handleFieldChange(field.name, e.target.value, field.type)} type={field.type === 'date' ? 'date' : 'text'} id={field.name} aria-describedby="standard_success_help" className="block py-2.5 px-0 w-full text-sm text-textAccent bg-transparent border-0 border-b-2 border-textAccent appearance-none dark:text-white dark:border-green-500 dark:focus:border-green-500 focus:outline-none focus:ring-0 peer" placeholder=" " />
                                 <label htmlFor={field.name} className="absolute text-sm text-textAccent dark:text-green-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">{field.label}</label>
                               </div>
                               {/* <p id="standard_success_help" class="mt-2 text-xs text-green-600 dark:text-green-400"><span class="font-medium">Well done!</span> Some success message.</p> */}

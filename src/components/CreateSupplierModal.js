@@ -118,10 +118,10 @@ const newFields = [
   { name: 'supplier_assessment_due_date', label: 'Supplier assessment due date ', value: '', type: 'date' },
   { name: 'supplier_assessment_status', label: 'Supplier Assessment status ', value: 'Not Due', options: [{ name: 'Not Due' }, { name: 'Not Yet Started' }, { name: 'In Progress' }, { name: 'Completed' }] },
   { name: 'supplier_assessment_reviewer_person', label: 'Supplier assessment reviewer person ', value: '' },
-  { name: 'supplier_agreement ', label: 'Supplier agreement ', value: 'Yes', options: [{ name: 'Yes' }, { name: 'No' }] },
-  { name: 'supplier_approval_status', label: 'Supplier approval status ', value: 'Draft ', options: [{ name: 'Draft ' }, { name: 'approved ' }, { name: 'rejected' }] },
-  { name: 'date_entered ', label: 'Date entered ', value: '', type: 'date' },
-  { name: 'decision_date ', label: 'Decision date ', value: '', type: 'date' }
+  { name: 'supplier_agreement', label: 'Supplier agreement ', value: 'Yes', options: [{ name: 'Yes' }, { name: 'No' }] },
+  { name: 'supplier_approval_status', label: 'Supplier approval status ', value: 'Draft ', options: [{ name: 'Draft ' }, { name: 'approved' }, { name: 'rejected' }] },
+  { name: 'date_entered', label: 'Date entered ', value: '', type: 'date' },
+  { name: 'decision_date', label: 'Decision date ', value: '', type: 'date' }
 ]
 
 export default function CreateSupplierModal ({
@@ -134,7 +134,7 @@ export default function CreateSupplierModal ({
   isUpdate = false
 }) {
   const [users, setUsers] = useState([])
-  const [supplierType, setSupplierType] = useState(null)
+  const [supplierType, setSupplierType] = useState('new')
 
   const [fields, setFields] = useState([])
 
@@ -157,16 +157,16 @@ export default function CreateSupplierModal ({
     }
 
     if (isUpdate) {
-      setSupplierType(updateData.data.supplierType)
-      if (updateData.data.supplierType === 'new') {
+      setSupplierType(updateData.supplierType)
+      if (updateData.supplierType === 'new') {
         newFields.forEach(item => {
-          item.value = updateData.data[item.name]
+          item.value = updateData[item.name]
         })
         getUserList()
         console.log(newFields)
       } else {
         existingFields.forEach(item => {
-          item.value = updateData.data[item.name]
+          item.value = updateData[item.name]
         })
       }
     }
@@ -296,7 +296,7 @@ export default function CreateSupplierModal ({
         supplier: mappedData
       })
     } else if (isUpdate === true) {
-      result = await httpClientRequest.put(`supplier/${updateData._id}`, mappedData)
+      result = await httpClientRequest.put(`supplier/${updateData.id}`, mappedData)
     }
     console.log(result)
     if (isUpdate) { updateSupplier() } else { addNewSupplier() }

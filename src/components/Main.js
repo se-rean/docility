@@ -6,12 +6,12 @@ import MainContent from './MainContent' // Import your menu icon
 import AuthenticateUser from '../lib/AuthenticateUser'
 import { decryptFromStorage, encryptAndStore } from '../lib/SecureStorage'
 import { useNavigate } from 'react-router-dom'
-
+const user = await decryptFromStorage('user')
 function Main () {
   const navigate = useNavigate()
   useEffect(() => {
-    const user = decryptFromStorage('user')
     // eslint-disable-next-line eqeqeq
+    console.log(user)
     if (!user || user == 'undefined' || user == 'null') {
       navigate('/')
     }

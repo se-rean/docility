@@ -5,7 +5,10 @@ import SiteForm from './company/SiteForm'
 import httpClientRequest from '../lib/httpClientRequest'
 import Modal from './Modal'
 import FileUploadComponent from './Upload'
+import { decryptFromStorage, encryptAndStore } from '../lib/SecureStorage'
 import axios from 'axios'
+const userData = decryptFromStorage('user')
+console.log(userData)
 const Company = () => {
   const [addNew, setAddNew] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
@@ -28,8 +31,9 @@ const Company = () => {
   }, [page, saving === true])
 
   const fetchData = async () => {
-    const companyData = await httpClientRequest.get(`/company/?page=${page}&page_size=${pageSize}`)
+    const companyData = await httpClientRequest.get(`/company/?companyId=${userData.company_id}&page=${page}&page_size=${pageSize}`)
     if (companyData?.is_success === false || !companyData) return alert(companyData?.message)
+    console.log(companyData)
     setCompany(companyData)
     setFetchingData(false)
   }
@@ -108,8 +112,8 @@ const Company = () => {
   }
 
   let filteredSites = []
-  if (!fetchingData && company.data) {
-    console.log(company.data)
+  if (!fetchingData && company.data && company.data.rows.length !== 0) {
+    if (company.data.rows.length === 0) return
     filteredSites = company.data.rows.filter(item =>
       // item?.company_organization.includes(searchTerm)
       item
@@ -192,7 +196,7 @@ const Company = () => {
                   addNewSite={addNewSite} />
                 <FileUploadComponent
                   onFileSelect={handleCompanyFileSelect}
-                  title="Upload File" />
+                  title="Upload Company File" />
                 <button
                   type="submit"
                   className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 mt-5">Save</button></>

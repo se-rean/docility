@@ -4,7 +4,7 @@ const DivisionEntry = ({ isUpdate, divisionData, onValuesChange }) => {
   const initialFields = [
     { name: 'department_name', label: 'Department', value: '' },
     { name: 'department_responsible_person', label: 'Department Responsible person', value: '' },
-    { name: 'staff', label: 'Department Number of Staff', value: '' }
+    { name: 'staff', label: 'Department Number of Staff', value: '', type: 'number' }
   ]
 
   const [divs, setDivs] = useState([{ id: 1, fields: initialFields }]) // Initial array with one div
@@ -20,7 +20,11 @@ const DivisionEntry = ({ isUpdate, divisionData, onValuesChange }) => {
     updateValue()
   }
 
-  const handleFieldChange = (divId, fieldName, value) => {
+  const handleFieldChange = (divId, fieldName, value, type = 'text') => {
+    const numericRegex = /^[0-9]*$/
+    console.log('type', type)
+    if (type === 'number' && !numericRegex.test(value)) return
+
     setDivs(prevDivs => prevDivs.map(div =>
       div.id === divId
         ? {
@@ -72,7 +76,7 @@ const DivisionEntry = ({ isUpdate, divisionData, onValuesChange }) => {
         <div key={id} className="grid md:grid-cols-1 md:gap-6 mt-5  ">
           <div className="relative z-0 w-full pb-4 group bg-primary p-5">
             <div className='flex justify-between pb-4'>
-              <h1>Department {nextDivId}</h1>
+              <h1>Department {index + 1}</h1>
               {
                 index > 0 && (
                   <button className='bg-red-500 hover:bg-accent text-primary hover:text-textPrimary border rounded-md px-[20px] py-[5px] ' onClick={() => handleRemoveDiv(id)}>Remove</button>
@@ -89,7 +93,7 @@ const DivisionEntry = ({ isUpdate, divisionData, onValuesChange }) => {
                         <select
                           id={field.name}
                           value={field.value}
-                          onChange={(e) => handleFieldChange(id, field.name, e.target.value)}
+                          onChange={(e) => handleFieldChange(id, field.name, e.target.value, field.type)}
                           className="mt-1 p-2 border rounded w-full"
                           required
                         >
@@ -106,7 +110,7 @@ const DivisionEntry = ({ isUpdate, divisionData, onValuesChange }) => {
                         <div className="relative z-0">
                           <input
                             value={field.value}
-                            onChange={(e) => handleFieldChange(id, field.name, e.target.value)}
+                            onChange={(e) => handleFieldChange(id, field.name, e.target.value, field.type)}
                             type="text"
                             id={field.name}
                             aria-describedby="standard_success_help"

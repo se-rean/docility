@@ -7,7 +7,7 @@ const SiteEntry = ({ sites, isUpdate, onValuesChange }) => {
     { name: 'site_state', label: 'State', value: '' },
     { name: 'site_suburb', label: 'Suburb', value: '' },
     { name: 'site_contact_person', label: 'Contact Person Name', value: '' },
-    { name: 'site_person_mobile', label: 'Contact Person Mobile', value: '' },
+    { name: 'site_person_mobile', label: 'Contact Person Mobile', value: '', type: 'number' },
     { name: 'site_person_email', label: 'Contact Person Email', value: '' },
     { name: 'site_status', label: 'Status', value: 'Inactive', options: [{ name: 'Active' }, { name: 'Inactive' }] }
   ]
@@ -51,7 +51,11 @@ const SiteEntry = ({ sites, isUpdate, onValuesChange }) => {
     updateValue()
   }
 
-  const handleFieldChange = (divId, fieldName, value) => {
+  const handleFieldChange = (divId, fieldName, value, type = 'text') => {
+    const numericRegex = /^[0-9]*$/
+    console.log('type', type)
+    if (type === 'number' && !numericRegex.test(value)) return
+
     setDivs(prevDivs => prevDivs.map(div =>
       div.id === divId
         ? {
@@ -95,7 +99,7 @@ const SiteEntry = ({ sites, isUpdate, onValuesChange }) => {
                         <select
                           id={field.name}
                           value={field.value}
-                          onChange={(e) => handleFieldChange(id, field.name, e.target.value)}
+                          onChange={(e) => handleFieldChange(id, field.name, e.target.value, field.type)}
                           className="mt-1 p-2 border rounded w-full"
                           required
                         >
@@ -112,7 +116,7 @@ const SiteEntry = ({ sites, isUpdate, onValuesChange }) => {
                         <div className="relative z-0">
                           <input
                             value={field.value}
-                            onChange={(e) => handleFieldChange(id, field.name, e.target.value)}
+                            onChange={(e) => handleFieldChange(id, field.name, e.target.value, field.type)}
                             type="text"
                             id={field.name}
                             aria-describedby="standard_success_help"

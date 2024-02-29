@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import SupplierTable from './SupplierTable'
 import CreateSupplierModal from './CreateSupplierModal'
 import httpClientRequest from '../lib/httpClientRequest'
+import { decryptFromStorage, encryptAndStore } from '../lib/SecureStorage'
+const userData = decryptFromStorage('user')
 export default function Supplier () {
   const [viewCreateModal, setViewCreateModal] = useState(false)
   const [fetchingData, setfetchingData] = useState(true)
@@ -13,8 +15,9 @@ export default function Supplier () {
 
   const fetchSupplierData = async () => {
     setfetchingData(true)
-    const result = await httpClientRequest.get('supplier')
-    console.log(result.data)
+    console.log(userData.company_id)
+    const result = await httpClientRequest.get(`supplier/?companyId=${userData.company_id}`)
+    console.log(result)
     setFilteredSupplier(result.data)
     setfetchingData(false)
   }
@@ -67,7 +70,6 @@ export default function Supplier () {
             <button onClick={() => createNew()} type="button" className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">Add Supplier</button>
             <button onClick={() => fetchSupplierData()} type="button" className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">Refresh</button>
           </div>
-          
         </div>
         <div className=''>
           {!fetchingData && <SupplierTable handleDelete={handleDelete} filteredSupplier={filteredSupplier} /> }

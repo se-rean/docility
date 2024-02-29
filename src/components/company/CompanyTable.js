@@ -17,7 +17,7 @@ const CompanyTable = ({ filteredSites, handleDelete }) => {
   }
   return (
     <div className="shadow-md sm:rounded-lg">
-      { modal && <UpdateCompanyModal data={companyData} closeModal={closeModal}/> }
+      { modal && companyData && <UpdateCompanyModal data={companyData} closeModal={closeModal}/> }
       <table className="w-full  text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
@@ -28,7 +28,7 @@ const CompanyTable = ({ filteredSites, handleDelete }) => {
             <th key='division' scope="col" className="px-6 py-3">
               Department
             </th>
-            {
+            { filteredSites.length > 0 &&
               Object.keys(filteredSites[0]).filter(item => !['id', 'sites', 'created_at', 'updated_at', 'company_id', 'division'].includes(item)).map(item => (
                 <th key={item} scope="col" className="px-6 py-3">
                   {item}
@@ -38,7 +38,7 @@ const CompanyTable = ({ filteredSites, handleDelete }) => {
           </tr>
         </thead>
         <tbody className='  h-[100%] '>
-          {filteredSites.map((site) => (
+          { filteredSites.length > 0 && filteredSites.map((site) => (
             <tr key={site.id} className="  bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-200 cursor-pointer dark:hover:bg-gray-600">
               <td className="flex flex-col px-6 py-4 gap-2 items-center  justify-center">
                 <a onClick={() => updateCompanyModal(site)} href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">

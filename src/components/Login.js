@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useHistory } from 'react-router-dom'
 import httpClientRequest from '../lib/httpClientRequest'
 import AuthenticateUser from '../lib/AuthenticateUser'
 import { decryptFromStorage, encryptAndStore } from '../lib/SecureStorage'
@@ -26,9 +26,10 @@ export default function Login () {
 
       encryptAndStore('user', JSON.stringify(response.data))
       localStorage.setItem('username', response.data.username)
-      localStorage.setItem('role', response.data.role)
+      localStorage.setItem('role', response.data?.role)
       // Redirect or update state to indicate successful login
-      navigate('/main')
+      // Reload the page
+      window.location.reload(true)
     } catch (error) {
       console.error('Login failed', error)
       // Handle login failure (e.g., show an error message)
