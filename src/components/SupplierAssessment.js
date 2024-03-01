@@ -81,7 +81,7 @@ export default function SupplierAssessment () {
       formData.append('file', blob, 'edited_data.xlsx')
 
       try {
-        const response = await axios.post('http://localhost:8009/milestone/api/v1/file/upload?docType=themeplate', formData, {
+        const response = await axios.post('http://13.213.6.180:8009/milestone/api/v1/file/upload?docType=themeplate', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -205,7 +205,7 @@ export default function SupplierAssessment () {
                   {themeplateData?.data?.length > 0 && themeplateData.data.map((item, index) => (
                     <tr key={index} className='hover:bg-secondary cursor-pointer'>
                       <td className="border p-2">
-                        <a className='text-textPrimary hover:underline' href={`http://localhost:8009/milestone/api/v1/file/read/${item.themplate}?docType=themeplate`}>{item.themplate}</a>
+                        <a className='text-textPrimary hover:underline' href={`http://13.213.6.180:8009/milestone/api/v1/file/read/${item.themplate}?docType=themeplate`}>{item.themplate}</a>
                       </td>
                       <td className="border p-2">{item.user_id}</td>
                       <td className="border p-2">{item.status}</td>

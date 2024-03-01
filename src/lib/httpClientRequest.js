@@ -52,7 +52,7 @@ export const httpClientRequest = Object.freeze({
       const config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: `http://localhost:8009/milestone/api/v1/file/upload?docType=${directory}`,
+        url: `http://13.213.6.180:8009/milestone/api/v1/file/upload?docType=${directory}`,
         headers: {
           'Content-Type': 'multipart/form-data'
         },

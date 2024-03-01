@@ -63,10 +63,10 @@ const CompanyTable = ({ filteredSites, handleDelete }) => {
                 ))
               }
               <td key='organization_structure' className="px-6 py-4 text-textPrimary hover:underline">
-                <a target='_blank' href={`http://localhost:8009/milestone/api/v1/file/read/${site.organisation_structure}?docType=organisation`} rel="noreferrer">{site.organisation_structure}</a>
+                <a target='_blank' href={`http://13.213.6.180:8009/milestone/api/v1/file/read/${site.organisation_structure}?docType=organisation`} rel="noreferrer">{site.organisation_structure}</a>
               </td>
               <td key='company_file' className="px-6 py-4 text-textPrimary hover:underline">
-                <a target='_blank' href={`http://localhost:8009/milestone/api/v1/file/read/${site.company_file}?docType=company_file`} rel="noreferrer">{site.company_file}</a>
+                <a target='_blank' href={`http://13.213.6.180:8009/milestone/api/v1/file/read/${site.company_file}?docType=company_file`} rel="noreferrer">{site.company_file}</a>
               </td>
             </tr>
           ))}

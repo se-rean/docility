@@ -94,7 +94,7 @@ export default function ManageUserModal ({
 
   const fetchRole = async () => {
     try {
-      const userRole = await httpClientRequest.get('http://localhost:8009/milestone/api/v1/user/role')
+      const userRole = await httpClientRequest.get('http://13.213.6.180:8009/milestone/api/v1/user/role')
       console.log(userRole)
       setFields((prevFields) => {
         const roleFieldIndex = prevFields.findIndex((field) => field.name === 'role')
