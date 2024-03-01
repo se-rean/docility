@@ -107,7 +107,7 @@ const CustomerTable = ({ filteredCustomer, handleDelete }) => {
             {filteredCustomer && filteredCustomer.map((customer) => (
               <tr key={customer} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-200 cursor-pointer dark:hover:bg-gray-600">
                 <td className="flex flex-row px-6 py-4 gap-2 items-center align-center justify-center">
-                  <a onClick={() => updatecustomer(customer)} href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                  <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
                   Edit
                   </a>
                   <a onClick={() => handleDelete(customer.id)} href="#" className="font-medium text-red-500 dark:text-blue-500 hover:underline">

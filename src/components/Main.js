@@ -12,7 +12,7 @@ function Main () {
   useEffect(() => {
     // eslint-disable-next-line eqeqeq
     console.log(user)
-    if (!user || user == 'undefined' || user == 'null') {
+    if (!user || user === 'undefined' || user === 'null') {
       navigate('/')
     }
   }, [])
